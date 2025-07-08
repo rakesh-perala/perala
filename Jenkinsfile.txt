@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    environment {
+        PYTHON_ENV = '/usr/bin/python3'
+    }
+
+    stages {
+        stage('Install Python Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Gemini Automation') {
+            steps {
+                sh 'python3 gemini_upload.py'
+            }
+        }
+
+        stage('Archive Output') {
+            steps {
+                archiveArtifacts artifacts: 'processed_output/*/.*', onlyIfSuccessful: true
+            }
+        }
+    }
+}
